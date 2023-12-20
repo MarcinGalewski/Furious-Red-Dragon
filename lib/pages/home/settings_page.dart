@@ -22,7 +22,7 @@ class SettingsPage extends StatelessWidget {
           bottom: Radius.circular(10),
         )),
         backgroundColor: kFuriousRedColor,
-        title: const Text('Ustawienia'),
+        title: const Text('Ustawienia', style: TextStyle(color: Colors.white)),
         actions: const <Widget>[],
       ),
       body: Material(
@@ -69,7 +69,7 @@ class SettingsPage extends StatelessWidget {
   }
 
   void getBackToSplash(context) {
-    Navigator.popUntil(context, ModalRoute.withName("/"));
+    Navigator.popUntil(context, ModalRoute.withName('/'));
     Navigator.pushNamed(context, WelcomePage.routeName);
   }
 }
