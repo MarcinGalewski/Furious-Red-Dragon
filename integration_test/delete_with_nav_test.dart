@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:furious_red_dragon/components/input.dart';
@@ -17,23 +16,43 @@ void main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVianF2a3ZhbWVlYndtc2p1amJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTkwNjIwNTUsImV4cCI6MjAxNDYzODA1NX0.C0T-L8L_T5ny_gL2Mm4RAQJ36-DtZDoByAbLAqPcymk',
   );
+  final client = SupabaseClient('https://ubjqvkvameebwmsjujbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVianF2a3ZhbWVlYndtc2p1amJkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5OTA2MjA1NSwiZXhwIjoyMDE0NjM4MDU1fQ.YLPceJ2EnaSBlM_FNeDlRJPp-WMzxySnM5uEgFe4jj0');
+
+  const email = 'user@email.com';
+  const password = 'password';
+  try {
+    final res = await client.auth.admin.createUser(AdminUserAttributes(
+        email: email, password: password, emailConfirm: true));
+  } on AuthException catch (error) {}
+
   if (supabase.auth.currentUser != null) {
     supabase.auth.signOut();
   }
-
-  group('Testing App', () {
+  /*final res = await supabase.auth.admin.createUser(AdminUserAttributes(
+      email: 'user@email.com',
+      password: 'password',
+      userMetadata: {'name': 'Yoda'},
+      emailConfirm: true));
+  const Duration(seconds: 1);
+  */
+  group('Testing App', ({var emailG = email, var passwordG = password}) {
     testWidgets('Navigation Test', (tester) async {
       await tester.pumpWidget(const MyApp());
       await tester.pumpAndSettle();
-      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump(const Duration(milliseconds: 100));
 
-      expect(find.text('Zaloguj się'), findsOneWidget);
+      expect(find.text('Zaloguj się'), findsOneWidget,
+          reason: 'Nie odnaleziono zaloguj się');
       await tester.tap(find.text('Zaloguj się'));
       await tester.pumpAndSettle();
 
-      expect(find.byType(CustomTextField), findsAtLeast(2));
-      expect(find.text('Email'), findsOne);
-      expect(find.text('Hasło'), findsOne);
+      expect(find.byType(CustomTextField), findsAtLeast(2),
+          reason: 'Nie odnaleziono dwoch text inputs');
+      expect(find.text('Email'), findsOne,
+          reason: 'Nie odnaleziono input email');
+      expect(find.text('Hasło'), findsOne,
+          reason: 'Nie odnaleziono input hasła');
 
       final email = find.widgetWithText(TextFormField, 'Email');
       final password = find.widgetWithText(TextFormField, 'Hasło');
@@ -44,48 +63,56 @@ void main() async {
 
       await tester.enterText(email, falseEmail);
       await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 2));
 
       await tester.enterText(password, falsePass);
+      await tester.pumpAndSettle();
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pump(const Duration(seconds: 2));
 
       await tester.tap(find.text('Zaloguj się'));
+      await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 7));
 
-      expect(find.text('OK'), findsOne);
+      expect(find.text('OK'), findsOne, reason: 'Nie odnaleziono przycisku OK');
       await tester.tap(find.text('OK'));
       await tester.pumpAndSettle();
 
       final emailN = find.widgetWithText(TextFormField, falseEmail);
       final passwordN = find.widgetWithText(TextFormField, falsePass);
 
-      await tester.enterText(emailN, 'tester@gmail.com');
+      //await tester.enterText(emailN, 'tester@gmail.com');
+      await tester.enterText(emailN, emailG);
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
 
-      expect(find.text('tester@gmail.com'), findsOne);
+      expect(find.text(emailG), findsOne,
+          reason: 'Text nie został wpisany w input email');
 
-      await tester.enterText(passwordN, '123');
-      await tester.pumpAndSettle();
-
+      //await tester.enterText(passwordN, '123');
+      await tester.enterText(passwordN, passwordG);
       await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 5));
 
       await tester.tap(find.text('Zaloguj się'));
       await tester.pump(const Duration(seconds: 5));
 
-      expect(find.text('Witaj, imię'), findsOne);
+      expect(find.text('Witaj, imię'), findsOne,
+          reason: 'Nie odnaleziono tekstu Witaj, imię');
 
       await tester.tap(find.text('Konto'));
       await tester.pump(const Duration(seconds: 2));
 
-      expect(find.text('Dodaj salę'), findsOneWidget);
+      expect(find.text('Dodaj salę'), findsOneWidget,
+          reason: 'Nie odnaleziono dodaj salę');
 
       await tester.tap(find.text('Historia'));
       await tester.pump(const Duration(seconds: 8));
 
-      //expect(find.text('3/21, Szef'), findsOne);
+      expect(find.textContaining('3/21, Szef'), findsOne,
+          reason: 'Nie odnaleziono wejścia z szefem');
 
       await tester.tap(find.text('Baza danych'));
       await tester.pump(const Duration(seconds: 2));
@@ -100,10 +127,13 @@ void main() async {
       await tester.tap(find.text('Sala 1/7 p.1, bud. 34'));
       await tester.pump(const Duration(seconds: 2));
 
-      expect(find.text('krzesło krzesło'), findsOne);
-      expect(find.text('komputer dell'), findsOne);
+      expect(find.text('krzesło krzesło'), findsOne,
+          reason: 'Nie odnaleziono krzesło krzesło');
+      expect(find.text('komputer dell'), findsOne,
+          reason: 'Nie odnaleziono komputer dell');
 
-      expect(find.byType(BackButton), findsOne);
+      expect(find.byType(BackButton), findsOne,
+          reason: 'Nie odnaleziono BackButton');
       await tester.tap(find.byType(BackButton));
       await tester.pump(const Duration(seconds: 2));
 
@@ -144,12 +174,35 @@ void main() async {
       await tester.tap(settings);
       await tester.pump(const Duration(seconds: 2));
 
-      final wyloguj = find.text('Wyloguj');
-      expect(wyloguj, findsOne);
-      await tester.tap(wyloguj);
-
+      final usun = find.textContaining('Usuń');
+      expect(usun, findsOne, reason: 'Nie odnaleziono przycisku Usuń');
+      await tester.tap(usun);
       await tester.pump(const Duration(seconds: 4));
-      expect(find.text('Zaloguj się'), findsOne);
+
+      expect(find.textContaining('Tak'), findsExactly(1),
+          reason: 'Nie odnaleziono przycisku Tak po kliknięciu Usuń');
+      expect(find.textContaining('Nie'), findsExactly(1),
+          reason: 'Nie odnaleziono przycisku Nie po kliknięciu Usuń');
+
+      await tester.tap(find.textContaining('Tak'));
+      await tester.pump(const Duration(seconds: 7));
+      expect(find.text('Zaloguj się'), findsOne,
+          reason:
+              'Nie odnaleziono przycisku zaloguj, najpewniej usuowanie nie zostalo jeszcze zrealizowane');
+
+      await tester.tap(find.text('Zaloguj się'));
+      await tester.pumpAndSettle();
+      await tester.enterText(email, emailG);
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      await tester.enterText(password, passwordG);
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Zaloguj się'));
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.textContaining('Invalid'), findsOne,
+          reason: 'Uzytkownik nie zostal usuniety');
 
       //expect(find.text('OK'), findsOne);
       //await tester.tap(find.text('OK'));

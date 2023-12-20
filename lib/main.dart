@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
           backgroundColor: kFuriousRedColor,
           iconTheme: IconThemeData(color: Colors.white),
+          foregroundColor: Colors.white
         ),
       ),
     );

@@ -10,11 +10,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'login_page.dart';
 
+
 // ignore: must_be_immutable
 @override
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
-
+  bool ifRegistered = false;
+  bool ifConfirmed = false;
   static const routeName = '/registerPage';
 
   // Controllers for email, password, and repeat password fields
@@ -68,6 +70,8 @@ class RegisterPage extends StatelessWidget {
               actions: [
                 BigRedButton(
                   onTap: () async {
+                    if (ifConfirmed == true) return;
+                    ifConfirmed = true;
                     try {
                       // Verify the token with Supabase
                       await supabase.auth.verifyOTP(
@@ -97,6 +101,7 @@ class RegisterPage extends StatelessWidget {
 
                     // Navigate to login page
                     Navigator.pushNamed(context, LoginPage.routeName);
+                    await  supabase.auth.signOut();
                   },
                   buttonTitle:'Potwierdź',
                   
@@ -146,22 +151,24 @@ class RegisterPage extends StatelessWidget {
                 ),
               ),
               CustomTextField(
-                controller: emailController,
                 labelText: 'Email',
+                controller: emailController,
               ),
               CustomTextField(
-                controller: passwordController,
                 labelText: 'Hasło',
+                controller: passwordController,
                 obscureText: true, // Hide entered characters with asterisks
               ),
               CustomTextField(
-                controller: repeatPasswordController,
                 labelText: 'Powtórz hasło',
+                controller: repeatPasswordController,
                 obscureText: true,
               ),
               kBigGap,
               BigRedButton(
                 onTap: () async {
+                  if (ifRegistered) return;
+                  ifRegistered = true;
                   // Empty validation
                   if (emailController.text.isEmpty ||
                       passwordController.text.isEmpty ||
@@ -225,6 +232,8 @@ class RegisterPage extends StatelessWidget {
                   emailController.text = '';
                   passwordController.text = '';
                   repeatPasswordController.text = '';
+                  ifRegistered = false;
+                  ifConfirmed = false;
                 },
                 buttonTitle: 'Zarejestruj się',
               ),
