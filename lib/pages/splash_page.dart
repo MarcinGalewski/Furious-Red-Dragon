@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:furious_red_dragon/components/buttons.dart';
-import 'package:furious_red_dragon/constants.dart';
 import 'package:furious_red_dragon/main.dart';
 import 'package:furious_red_dragon/pages/home_page.dart';
 import 'package:furious_red_dragon/pages/welcome_page.dart';

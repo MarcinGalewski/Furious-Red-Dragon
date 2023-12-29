@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:furious_red_dragon/components/input.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:furious_red_dragon/main.dart';
-import 'package:flutter/services.dart';
 
 void main() async {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();

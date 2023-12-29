@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:furious_red_dragon/main.dart';
-import 'package:furious_red_dragon/pages/splash_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../constants.dart';
 import 'settings_page.dart';

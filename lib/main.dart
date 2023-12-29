@@ -6,7 +6,6 @@ import 'package:furious_red_dragon/pages/welcome_page.dart';
 import 'package:furious_red_dragon/pages/splash_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'pages/register_page.dart';
-
 import 'pages/home_page.dart';
 
 Future<void> main() async {
@@ -42,11 +41,10 @@ class MyApp extends StatelessWidget {
       navigatorKey: MyApp.navigatorKey,
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
-          elevation: 0,
-          backgroundColor: kFuriousRedColor,
-          iconTheme: IconThemeData(color: Colors.white),
-          foregroundColor: Colors.white
-        ),
+            elevation: 0,
+            backgroundColor: kFuriousRedColor,
+            iconTheme: IconThemeData(color: Colors.white),
+            foregroundColor: Colors.white),
       ),
     );
   }
