@@ -6,6 +6,9 @@ import 'package:furious_red_dragon/pages/splash_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'pages/register_page.dart';
 
+import 'dart:async';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+
 import 'pages/home_page.dart';
 
 Future<void> main() async {
@@ -18,6 +21,17 @@ Future<void> main() async {
   );
   runApp(const MyApp());
 }
+
+Future<bool> isInternet() async {
+  bool connectivityResult = await (InternetConnection().hasInternetAccess);
+  if (connectivityResult) {
+    return true;
+  } else {
+    // Wifi detected but no internet connection found.
+    return false;
+  }
+}
+
 
 final supabase = Supabase.instance.client;
 
