@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:furious_red_dragon/constants.dart';
 import 'package:furious_red_dragon/pages/home/add_room.dart';
 import 'package:furious_red_dragon/pages/login_page.dart';
+import 'package:furious_red_dragon/pages/no_internet.dart';
 import 'package:furious_red_dragon/pages/welcome_page.dart';
 import 'package:furious_red_dragon/pages/splash_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -22,16 +23,6 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-Future<bool> isInternet() async {
-  bool connectivityResult = await (InternetConnection().hasInternetAccess);
-  if (connectivityResult) {
-    return true;
-  } else {
-    // Wifi detected but no internet connection found.
-    return false;
-  }
-}
-
 final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
@@ -50,6 +41,7 @@ class MyApp extends StatelessWidget {
         LoginPage.routeName: (context) => const LoginPage(),
         HomePage.routeName: (context) => const HomePage(),
         AddRoomPage.routeName: (context) => const AddRoomPage(),
+        NoInternetDialog.routeName: (context) => const NoInternetDialog()
       },
       navigatorKey: MyApp.navigatorKey,
       theme: ThemeData(
