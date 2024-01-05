@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furious_red_dragon/main.dart';
-import 'package:furious_red_dragon/pages/splash_page.dart';
+import 'package:furious_red_dragon/pages/welcome_page.dart';
 import 'delete_account.dart'; // Załóżmy, że plik delete_account.dart znajduje się w tym samym folderze co ten plik
 import 'package:furious_red_dragon/components/buttons.dart';
 import '../../constants.dart';
@@ -21,7 +21,7 @@ class SettingsPage extends StatelessWidget {
           bottom: Radius.circular(10),
         )),
         backgroundColor: kFuriousRedColor,
-        title: const Text('Ustawienia'),
+        title: const Text('Ustawienia', style: TextStyle(color: Colors.white)),
         actions: const <Widget>[],
       ),
       body: Material(
@@ -57,7 +57,7 @@ class SettingsPage extends StatelessWidget {
                   onTap: () async {
                     await supabase.auth
                         .signOut()
-                        .then((value) => getBackToSplah(context));
+                        .then((value) => getBackToSplash(context));
                   },
                   buttonTitle: 'Wyloguj')
             ],
@@ -67,7 +67,8 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  void getBackToSplah(context) {
-    Navigator.pushNamed(context, SplashPage.routeName);
+  void getBackToSplash(context) {
+    Navigator.popUntil(context, ModalRoute.withName('/'));
+    Navigator.pushNamed(context, WelcomePage.routeName);
   }
 }

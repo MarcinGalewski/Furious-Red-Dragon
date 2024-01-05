@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:furious_red_dragon/constants.dart';
 import 'package:furious_red_dragon/pages/home/add_room.dart';
 import 'package:furious_red_dragon/pages/login_page.dart';
+import 'package:furious_red_dragon/pages/welcome_page.dart';
 import 'package:furious_red_dragon/pages/splash_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'pages/register_page.dart';
-
 import 'dart:async';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
@@ -32,7 +32,6 @@ Future<bool> isInternet() async {
   }
 }
 
-
 final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
@@ -46,6 +45,7 @@ class MyApp extends StatelessWidget {
       title: 'Furious Red Dragon',
       home: const SplashPage(),
       routes: {
+        WelcomePage.routeName: (context) => const WelcomePage(),
         RegisterPage.routeName: (context) => RegisterPage(),
         LoginPage.routeName: (context) => const LoginPage(),
         HomePage.routeName: (context) => const HomePage(),
@@ -56,7 +56,10 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(
           elevation: 0,
           backgroundColor: kFuriousRedColor,
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+          foregroundColor: Colors.white,
         ),
       ),
     );

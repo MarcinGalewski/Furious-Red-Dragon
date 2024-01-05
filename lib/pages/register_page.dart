@@ -8,14 +8,17 @@ import 'package:furious_red_dragon/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../main.dart';
+import 'login_page.dart';
 
 @override
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
-
+  bool ifRegistered = false;
+  bool ifConfirmed = false;
   static const routeName = '/registerPage';
 
   // Controllers for email, password, and repeat password fields
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController repeatPasswordController =
@@ -39,60 +42,77 @@ class RegisterPage extends StatelessWidget {
   }
 
   // Function to show a Token Confirmation Dialog
-  Future<void> _showTokenConfirmationDialog(String email) async {
-    return showDialog(
+  Future<void> _showTokenConfirmationDialog(String email, String name) async {
+    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+    showDialog(
       context: _context!,
-      builder: (context) => AlertDialog(
-        title: const Text('Potwierdź rejestrację'),
-        content: Column(
-          children: [
-            const Text(
-                'Wprowadź token potwierdzający rejestrację, który został wysłany na Twój adres e-mail.'),
-            kMediumGap,
-            TextFormField(
-              controller: tokenController,
-              decoration: const InputDecoration(labelText: 'Token'),
-            ),
-          ],
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                //Verify the token with Supabase
-                await supabase.auth.verifyOTP(
-                  type: OtpType.signup,
-                  token: tokenController.text,
-                  email: email,
-                );
+      builder: (context) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Scaffold(
+              key: scaffoldKey,
+              appBar: AppBar(
+                title: const Text('Potwierdź rejestrację'),
+              ),
+              body: AlertDialog(
+                content: Column(
+                  children: [
+                    const Text(
+                        'Wprowadź token potwierdzający rejestrację, który został wysłany na Twój adres e-mail.'),
+                    kMediumGap,
+                    TextFormField(
+                      controller: tokenController,
+                      decoration: const InputDecoration(labelText: 'Token'),
+                    ),
+                  ],
+                ),
+                actions: [
+                  BigRedButton(
+                    onTap: () async {
+                      if (ifConfirmed == true) return;
+                      ifConfirmed = true;
+                      try {
+                        // Verify the token with Supabase
+                        await supabase.auth.verifyOTP(
+                          type: OtpType.signup,
+                          token: tokenController.text,
+                          email: email,
+                        );
+                        // Handle verification error
+                      } catch (error) {
+                        _showSnackBar(
+                            'Nieudana weryfikacja tokena. Sprawdź poprawność tokena.');
+                        return;
+                      }
 
-                //Add new user
-                await supabase.from('roles').insert([
-                  {
-                    'status': 'admin',
-                    'email': email,
-                  }
-                ]);
+                      // Add new user
+                      await supabase.from('roles').insert([
+                        {
+                          'name': name,
+                          'status': 'admin',
+                          'email': email,
+                        }
+                      ]);
 
-                // Close the dialog
-                if (!context.mounted) return;
-                Navigator.pop(context);
+                      // Close the dialog
+                      if (!context.mounted) return;
+                      Navigator.pop(context);
 
-                // Show a success message
-                _showSnackBar('Zarejestrowano pomyślnie!');
-              } catch (error) {
-                // Close the dialog
-                if (!context.mounted) return;
-                Navigator.pop(context);
-                // Handle verification error
-                _showSnackBar(
-                    'Weryfikacja nieudana. Sprawdź poprawność tokena.');
-              }
-            },
-            child: const Text('Potwierdź'),
-          ),
-        ],
-      ),
+                      _showSnackBar('Zarejestrowano pomyślnie!');
+
+                      // Navigate to login page
+                      Navigator.pushNamed(context, LoginPage.routeName);
+                      await supabase.auth.signOut();
+                    },
+                    buttonTitle: 'Potwierdź',
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -132,85 +152,27 @@ class RegisterPage extends StatelessWidget {
                 ),
               ),
               CustomTextField(
-                controller: emailController,
-                labelText: 'Email',
+                labelText: 'Imię',
+                controller: nameController,
               ),
               CustomTextField(
-                controller: passwordController,
+                labelText: 'Email',
+                controller: emailController,
+              ),
+              CustomTextField(
                 labelText: 'Hasło',
+                controller: passwordController,
                 obscureText: true, // Hide entered characters with asterisks
               ),
               CustomTextField(
-                controller: repeatPasswordController,
                 labelText: 'Powtórz hasło',
+                controller: repeatPasswordController,
                 obscureText: true,
               ),
               kBigGap,
               BigRedButton(
                 onTap: () async {
-                  // Empty validation
-                  if (emailController.text.isEmpty ||
-                      passwordController.text.isEmpty ||
-                      repeatPasswordController.text.isEmpty) {
-                    _showSnackBar('Wypełnij wszystkie pola');
-                    return;
-                  }
-
-                  //Password validation
-                  if (passwordController.text !=
-                      repeatPasswordController.text) {
-                    passwordController.text = '';
-                    repeatPasswordController.text = '';
-                    _showSnackBar('Hasła nie są identyczne');
-                    return;
-                  }
-                  // E-mail validation
-                  if (!RegExp(
-                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-                      .hasMatch(emailController.text)) {
-                    _showSnackBar('Wpisz poprawny adres e-mail');
-                    emailController.text = '';
-                    return;
-                  }
-
-                  try {
-                    //Try to register in Supabase
-                    await supabase.auth.signUp(
-                        password: passwordController.text,
-                        email: emailController.text);
-                    // Checking if email is already registered
-                    final data = await supabase
-                        .from('roles')
-                        .select('email')
-                        .eq('email', emailController.text);
-                    final count = data.length;
-                    if (count == 0) {
-                      await _showTokenConfirmationDialog(emailController.text);
-                    } else {
-                      _showSnackBar('Email już został zarejestrowany');
-                    }
-                    // Catch errors
-                  } on AuthException catch (error) {
-                    if (error.statusCode == '429') {
-                      // Handle email limit exceeded error
-                      _showSnackBar(
-                          'Przekroczono limit wysyłania wiadomości e-mail');
-                    } else {
-                      // Display error message
-                      _showSnackBar(error.message);
-                    }
-                  } on TimeoutException catch (error) {
-                    // Handle TimeoutException
-                    _showSnackBar(
-                        'Przekroczono czas oczekiwania: ${error.message}');
-                  } on Exception catch (error) {
-                    // Error registration
-                    _showSnackBar(
-                        'Rejestracja nieudana.Wystąpił nieznany wyjątek: ${error.toString()}');
-                  }
-                  emailController.text = '';
-                  passwordController.text = '';
-                  repeatPasswordController.text = '';
+                  register();
                 },
                 buttonTitle: 'Zarejestruj się',
               ),
@@ -219,5 +181,87 @@ class RegisterPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  ///
+  void register() async {
+    if (ifRegistered) return;
+    ifRegistered = true;
+
+    validateRegister();
+
+    try {
+      //Try to register in Supabase
+      await supabase.auth.signUp(
+          password: passwordController.text, email: emailController.text);
+
+      // Checking if email is already registered
+      final data = await supabase
+          .from('roles')
+          .select('email')
+          .eq('email', emailController.text);
+      final count = data.length;
+      if (count == 0) {
+        await _showTokenConfirmationDialog(
+            emailController.text, nameController.text);
+        resetInputs();
+      } else {
+        _showSnackBar('Email już został zarejestrowany');
+      }
+      // Catch errors
+    } on AuthException catch (error) {
+      if (error.statusCode == '429') {
+        // Handle email limit exceeded error
+        _showSnackBar('Przekroczono limit wysyłania wiadomości e-mail');
+      } else {
+        // Display error message
+        _showSnackBar(error.message);
+      }
+    } on TimeoutException catch (error) {
+      // Handle TimeoutException
+      _showSnackBar('Przekroczono czas oczekiwania: ${error.message}');
+    } on Exception catch (error) {
+      // Error registration
+      _showSnackBar(
+          'Rejestracja nieudana.Wystąpił nieznany wyjątek: ${error.toString()}');
+    }
+  }
+
+  /// Validates register - handled cases:
+  /// - empty inputs
+  /// - passwords don't match
+  /// - bad email format
+  void validateRegister() {
+    // Empty validation
+    if (nameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        repeatPasswordController.text.isEmpty) {
+      _showSnackBar('Wypełnij wszystkie pola');
+      return;
+    }
+
+    // Password validation
+    if (passwordController.text != repeatPasswordController.text) {
+      _showSnackBar('Hasła nie są identyczne');
+      return;
+    }
+
+    // E-mail validation
+    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        .hasMatch(emailController.text)) {
+      _showSnackBar('Wpisz poprawny adres e-mail');
+      return;
+    }
+  }
+
+  /// Resets all inputs and variables
+  void resetInputs() {
+    nameController.text = '';
+    emailController.text = '';
+    passwordController.text = '';
+    repeatPasswordController.text = '';
+    ifRegistered = false;
+    ifConfirmed = false;
   }
 }

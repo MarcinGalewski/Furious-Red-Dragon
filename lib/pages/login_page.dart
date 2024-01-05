@@ -18,6 +18,7 @@ class LoginPage extends StatelessWidget {
     final supabase = Supabase.instance.client;
     TextEditingController passwordController = TextEditingController();
     TextEditingController emailController = TextEditingController();
+    bool isLoggingIn = false;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,6 +74,8 @@ class LoginPage extends StatelessWidget {
               kBigGap,
               BigRedButton(
                 onTap: () async {
+                  if (isLoggingIn) return;
+                  isLoggingIn = true;
                   try {
                     await supabase.auth.signInWithPassword(
                       email: emailController.text,
@@ -81,10 +84,12 @@ class LoginPage extends StatelessWidget {
                   } on AuthException catch (authError) {
                     print('Błąd logowania: $authError');
                     _showErrorDialog(context, authError.message);
+                    isLoggingIn = false;
                     return;
                   }
-                  Navigator.of(context)
-                      .pushReplacementNamed(HomePage.routeName);
+                  Navigator.popUntil(context, ModalRoute.withName('/welcomePage'));
+                  Navigator.pushReplacementNamed(context, HomePage.routeName);
+                  isLoggingIn = false;
                 },
                 buttonTitle: 'Zaloguj się',
               ),

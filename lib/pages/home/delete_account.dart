@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:furious_red_dragon/main.dart';
-import 'package:furious_red_dragon/pages/splash_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../constants.dart';
+import 'settings_page.dart';
 import 'package:furious_red_dragon/components/buttons.dart';
 
 class DeleteAccountPage extends StatelessWidget {
@@ -62,15 +63,22 @@ class DeleteAccountPage extends StatelessWidget {
     );
   }
 
-  void getBackToSplash(context) {
-    Navigator.pushNamed(context, SplashPage.routeName);
-  }
+  //void getBackToSplash(context) {
+  //  Navigator.popUntil(context, ModalRoute.withName('/'));
+  //}
 
   Future<void> deleteUser(context) async {
     var uuid = supabase.auth.currentUser?.id;
+    var email = supabase.auth.currentUser?.email;
+    final client = SupabaseClient('https://ubjqvkvameebwmsjujbd.supabase.co/',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVianF2a3ZhbWVlYndtc2p1amJkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5OTA2MjA1NSwiZXhwIjoyMDE0NjM4MDU1fQ.YLPceJ2EnaSBlM_FNeDlRJPp-WMzxySnM5uEgFe4jj0');
+    await supabase.auth.signOut();
+    try {
+      await client.from('roles').delete().eq('email', email);
+    } on Exception {}
+    await client.auth.admin.deleteUser(uuid!);
 
-    // await supabase.auth.admin
-    //     .deleteUser(uuid!)
-    //     .then((value) => getBackToSplash(context));
+    SettingsPage helper = const SettingsPage();
+    helper.getBackToSplash(context);
   }
 }

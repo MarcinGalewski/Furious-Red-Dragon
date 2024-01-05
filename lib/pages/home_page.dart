@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:furious_red_dragon/main.dart';
 import 'package:furious_red_dragon/pages/home/account_page.dart';
 import 'package:furious_red_dragon/pages/home/help_page.dart';
 import 'package:furious_red_dragon/pages/home/history_page.dart';
 import 'package:furious_red_dragon/pages/home/scanner_page.dart';
 import 'package:furious_red_dragon/pages/home/settings_page.dart';
-import '../components/nav_tabs.dart';
-import '../constants.dart';
+import 'package:furious_red_dragon/components/nav_tabs.dart';
+import 'package:furious_red_dragon/constants.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  static const routeName = '/homePage';
+  static const routeName = '/home';
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,21 @@ class HomePage extends StatelessWidget {
             ),
           ),
           backgroundColor: kFuriousRedColor,
-          title: const Text('Witaj, imię'),
+          title: FutureBuilder<String>(
+            future: getUserName(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text(
+                    'Witaj, Loading...'); // Display a loading message
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                // Data has been successfully fetched
+                var userName = snapshot.data ?? 'Default User';
+                return Text('Witaj, $userName');
+              }
+            },
+          ),
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -56,5 +71,15 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<String> getUserName() async {
+    var response = await supabase
+        .from('roles')
+        .select('name')
+        .eq('user_id', supabase.auth.currentUser?.id)
+        .single();
+
+    return response['name'] as String;
   }
 }
