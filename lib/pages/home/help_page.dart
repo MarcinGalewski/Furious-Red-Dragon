@@ -92,24 +92,52 @@ class FAQSection extends StatelessWidget {
           kSmallGap,
           FAQEntry(
             question: 'Do czego służy Wściekły Czerwony Smok?',
-            answer: '<<<Insert text z dokumentacji >>>',
-          ),
-          kSmallGap,
-          FAQEntry(
-            question: 'Czy istnieje wizualny podgląd do budynków i sal?',
             answer:
-                'Aby uzyskać wizualny podgląd do planów budynków i rozmieszczeń sal: \nOtwórz aplikację Kampus \nPobierz aplikację Kampus',
+                'Aplikacja  służy do  przeprowadzania inwentaryzacji przedmiotów w salach w budynkach na terenie SGGW.',
           ),
           kSmallGap,
           FAQEntry(
-            question: 'Kto może dodawać nowych użytkowników?',
+              question: 'Czy istnieje wizualny podgląd do budynków i sal?',
+              answer:
+                  'Aby uzyskać wizualny podgląd do planów budynków i rozmieszczeń sal: Pobierz aplikację Kampus'),
+          kSmallGap,
+          FAQEntry(
+            question: 'Kto może dodawać i usuwać  użytkowników?',
             answer:
-                'Tylko osoba z uprawnieniami administratora może dodawać nowych użytkowników.',
+                'Tylko osoba z uprawnieniami administratora może dodawać oraz usuwać konta użytkowników.',
           ),
           kSmallGap,
           FAQEntry(
-            question: 'Pytanie czwarte',
-            answer: 'Odpowiedź na pytanie czwarte.',
+            question: 'Jak mogę zacząć korzystać z aplikacji?',
+            answer:
+                'Wystarczy pobrać aplikację, następnie zalogować się na wcześniej utworzonym koncie przez administratora  i postępuj zgodnie z instrukcjami dotyczącymi skanowania.',
+          ),
+          kSmallGap,
+          FAQEntry(
+            question:
+                'Czy aplikacja wspiera funkcję śledzenia historii zmian przedmiotów w salach??',
+            answer:
+                'Aplikacja pozwala na sprawdzenie historii zmian przedmiotów, które znajdują się w sali, lub tych które z jakiegoś powodu się już w niej nie znajdują. (np. były popsute, lub powinny znajdować się w innej sali)',
+          ),
+          kSmallGap,
+          FAQEntry(
+            question:
+                'Czy potrzebuję specjalnego sprzętu do korzystania z aplikacji?',
+            answer:
+                'Do korzystania z aplikacji wystarczy zwykły smartfon lub tablet z systemem Android lub iOS z odpowiednią kamerą.',
+          ),
+          kSmallGap,
+          FAQEntry(
+            question:
+                'Czy jeżeli posiadam urządzenie z zepsutą kamerą nadal mogę korzystać z urządzenia?',
+            answer:
+                'Tak, aplikacja pozwala na skanowanie kodów kreskowych, oraz na wpisywanie ich ręcznie.',
+          ),
+          kSmallGap,
+          FAQEntry(
+            question: 'Jak często powinienem aktualizować dane w aplikacji?',
+            answer:
+                'Zależy to od specyfiki zastosowania. Jeśli przedmioty w salach często się zmieniają, regularne aktualizacje mogą być konieczne, aby utrzymać dokładność danych.',
           ),
         ],
       ),
