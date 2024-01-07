@@ -221,7 +221,7 @@ class _InfoPopUpState extends State<InfoPopUp> {
       child: Text(
         'Przed zatwierdzeniem kodu upewnij się, że:\n'
         '  • kod składa się tylko z cyfr (bez spacji)\n'
-        '  • kod składa się dokładnie z 13 cyfr\n',
+        '  • kod składa się dokładnie z 8 cyfr\n',
         style: kGlobalTextStyle.copyWith(fontSize: 14, height: 1.5),
       ),
     );
