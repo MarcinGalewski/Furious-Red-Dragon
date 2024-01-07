@@ -30,3 +30,4 @@ const Widget kBigGap = Gap(20);
 
 /// Contains logo of the app
 const kDragonLogoPath = 'assets/images/dragon.png';
+const kMushuPath = 'assets/images/mushu.png';
