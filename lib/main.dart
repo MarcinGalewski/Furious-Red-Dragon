@@ -44,12 +44,12 @@ class MyApp extends StatelessWidget {
       },
       navigatorKey: MyApp.navigatorKey,
       theme: ThemeData(
+        colorScheme:
+            ColorScheme.fromSwatch().copyWith(secondary: kFuriousRedColor),
         appBarTheme: const AppBarTheme(
           elevation: 0,
           backgroundColor: kFuriousRedColor,
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
+          iconTheme: IconThemeData(color: Colors.white),
           foregroundColor: Colors.white,
         ),
       ),
