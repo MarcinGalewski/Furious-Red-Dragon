@@ -28,6 +28,5 @@ const Widget kMediumGap = Gap(15);
 /// Creates a gap that has 20px.
 const Widget kBigGap = Gap(20);
 
+/// Contains logo of the app
 const kDragonLogoPath = 'assets/images/dragon.png';
-
-

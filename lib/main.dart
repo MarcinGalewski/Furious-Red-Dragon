@@ -8,7 +8,6 @@ import 'package:furious_red_dragon/pages/splash_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'pages/register_page.dart';
 import 'dart:async';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import 'pages/home_page.dart';
 

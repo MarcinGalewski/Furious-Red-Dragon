@@ -23,16 +23,4 @@ class AccountPage extends StatelessWidget {
       ),
     );
   }
-
-// Było jak poniżej, przerobiłem trochę całość by sensownie umieścić przycisk
-
-/*  @override
-  Widget build(BuildContext context) {
-    return Material(
-        color: kPageBackgroundColor,
-        child: ListView(
-          children: const [Text('Konto')],
-        )
-    );
-  }*/
 }

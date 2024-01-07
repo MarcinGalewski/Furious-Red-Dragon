@@ -122,7 +122,7 @@ class _SecondScannerPage extends State<SecondScannerPage> {
             onChanged: (text) {
               setState(() {
                 colorController();
-              });    
+              });
             },
           ),
         ),
@@ -143,8 +143,7 @@ class _SecondScannerPage extends State<SecondScannerPage> {
     if (barCodeController.text.length != inputMaxLenght) {
       buttonColor = kDarkerGrey;
       buttonTextColor = Colors.black;
-    }
-    else {
+    } else {
       buttonColor = kFuriousRedColor;
       buttonTextColor = Colors.white;
     }
