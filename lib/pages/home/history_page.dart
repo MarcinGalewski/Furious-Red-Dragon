@@ -7,7 +7,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 enum View { history, database, details }
 
 int selectedRoomId = 0;
-int selectedAdminDatabase = 0;
 
 final _supabase = Supabase.instance.client;
 
@@ -202,7 +201,6 @@ class _ItemsStreamState extends State<ItemsStream> {
           for (var item in items!) {
             final type = item['type'];
             final brand = item['brand'];
-            final serialNumber = item['serial_number'];
             final reportString = type + ' ' + brand;
             itemsListItems.add(BasicListItem(
               onTap: () {},
@@ -250,8 +248,10 @@ class _UsersStreamState extends State<UsersStream> {
               buttonTitle: userString,
             ));
           }
-          return ListView(
-            children: itemsListItems,
+          return Expanded(
+            child: ListView(
+              children: itemsListItems,
+            ),
           );
         });
   }
@@ -340,8 +340,130 @@ class UsersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: const WhiteCard(
-        child: UsersStream(),
+      body: WhiteCard(
+        child: Column(
+          children: [
+            UsersStream(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AddUserScreen()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                ),
+                child: Column(children: [
+                  Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.black,
+                  ),
+                  Text(
+                    'Dodaj',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ]),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AddUserScreen extends StatefulWidget {
+  const AddUserScreen({super.key});
+
+  @override
+  State<AddUserScreen> createState() => _AddUserScreenState();
+}
+
+class _AddUserScreenState extends State<AddUserScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Dodaj użytkownika'),
+      ),
+      body: WhiteCard(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  width: 40,
+                  child: Text('Imię:'),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Color(0xffF3F3F3)),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelStyle: kGlobalTextStyle.copyWith(
+                            color: const Color.fromRGBO(177, 170, 170, 1),
+                            fontSize: 18,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                        ),
+                        style: kGlobalTextStyle.copyWith(
+                          color: const Color.fromARGB(255, 2, 2, 2),
+                          fontSize: 18,
+                        ),
+                        cursorColor: kFuriousRedColor,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            kSmallGap,
+            Row(
+              children: [
+                SizedBox(width: 40, child: Text('Email:')),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Color(0xffF3F3F3)),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelStyle: kGlobalTextStyle.copyWith(
+                            color: const Color.fromRGBO(177, 170, 170, 1),
+                            fontSize: 18,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                        ),
+                        style: kGlobalTextStyle.copyWith(
+                          color: const Color.fromARGB(255, 2, 2, 2),
+                          fontSize: 18,
+                        ),
+                        cursorColor: kFuriousRedColor,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            kSmallGap,
+            SmallButton(onTap: () {}, buttonTitle: 'Dodaj')
+          ],
+        ),
       ),
     );
   }
