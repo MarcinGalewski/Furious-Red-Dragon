@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:furious_red_dragon/constants.dart';
+import 'package:furious_red_dragon/pages/global_states.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class BarcodeReader extends StatefulWidget {
@@ -101,11 +102,7 @@ class BarcodeReaderState extends State<BarcodeReader> {
   void onPermissionSet(
       BuildContext context, QRViewController controller, bool permission) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $permission');
-    if (!permission) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
-      );
-    }
+    isPhotoPermission = permission;
   }
 
   @override

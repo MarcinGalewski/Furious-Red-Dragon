@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:furious_red_dragon/components/no_camera.dart';
 import 'package:furious_red_dragon/components/scan_barcode.dart';
+import 'package:furious_red_dragon/pages/global_states.dart';
 
 import '../../constants.dart';
 import 'package:furious_red_dragon/components/buttons.dart';
@@ -21,12 +23,13 @@ class MainScannerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 45),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Expanded(
-              child: BarcodeReader(),
+            Expanded(
+              child:
+                  isPhotoPermission ? const BarcodeReader() : const NoCamera(),
             ),
             kBigGap,
             BigWhiteButton(
@@ -221,7 +224,7 @@ class _InfoPopUpState extends State<InfoPopUp> {
       child: Text(
         'Przed zatwierdzeniem kodu upewnij się, że:\n'
         '  • kod składa się tylko z cyfr (bez spacji)\n'
-        '  • kod składa się dokładnie z 8 cyfr\n',
+        '  • kod składa się dokładnie z 9 cyfr\n',
         style: kGlobalTextStyle.copyWith(fontSize: 14, height: 1.5),
       ),
     );
