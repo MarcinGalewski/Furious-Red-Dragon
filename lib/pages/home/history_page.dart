@@ -55,14 +55,13 @@ class _HistoryPageState extends State<HistoryPage> {
                 )
               else if (selectedView == View.database)
                 if (snapshot.data == 'admin')
-                  if (selectedAdminDatabase == 0)
-                    const AdminDatabaseMenu()
-                  else
-                    const Expanded(
-                      child: WhiteCard(
-                        child: RoomsStream(),
-                      ),
-                    )
+                  const AdminDatabaseMenu()
+                else
+                  const Expanded(
+                    child: WhiteCard(
+                      child: RoomsStream(),
+                    ),
+                  )
             ],
           );
         },
