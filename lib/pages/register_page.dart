@@ -83,6 +83,7 @@ class RegisterPage extends StatelessWidget {
                       } catch (error) {
                         _showSnackBar(
                             'Nieudana weryfikacja tokena. Sprawdź poprawność tokena.');
+                            retryRegistration();
                         return;
                       }
 
@@ -114,6 +115,12 @@ class RegisterPage extends StatelessWidget {
         );
       },
     );
+  }
+
+    // Reseting flags after invalid registration
+  void retryRegistration() {
+    ifRegistered = false;
+    ifConfirmed = false;
   }
 
   @override
@@ -200,30 +207,35 @@ class RegisterPage extends StatelessWidget {
           .from('roles')
           .select('email')
           .eq('email', emailController.text);
-      final count = data.length;
+      final count = data.length;  
       if (count == 0) {
         await _showTokenConfirmationDialog(
             emailController.text, nameController.text);
         resetInputs();
       } else {
         _showSnackBar('Email już został zarejestrowany');
+        retryRegistration();
       }
       // Catch errors
     } on AuthException catch (error) {
       if (error.statusCode == '429') {
         // Handle email limit exceeded error
         _showSnackBar('Przekroczono limit wysyłania wiadomości e-mail');
+        retryRegistration();
       } else {
         // Display error message
         _showSnackBar(error.message);
+        retryRegistration();
       }
     } on TimeoutException catch (error) {
       // Handle TimeoutException
       _showSnackBar('Przekroczono czas oczekiwania: ${error.message}');
+      retryRegistration();
     } on Exception catch (error) {
       // Error registration
       _showSnackBar(
-          'Rejestracja nieudana.Wystąpił nieznany wyjątek: ${error.toString()}');
+          'Rejestracja nieudana. Wystąpił nieznany wyjątek: ${error.toString()}');
+      retryRegistration();
     }
   }
 
@@ -238,12 +250,14 @@ class RegisterPage extends StatelessWidget {
         passwordController.text.isEmpty ||
         repeatPasswordController.text.isEmpty) {
       _showSnackBar('Wypełnij wszystkie pola');
+      retryRegistration();
       return;
     }
 
     // Password validation
     if (passwordController.text != repeatPasswordController.text) {
       _showSnackBar('Hasła nie są identyczne');
+      retryRegistration();
       return;
     }
 
@@ -251,6 +265,7 @@ class RegisterPage extends StatelessWidget {
     if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
         .hasMatch(emailController.text)) {
       _showSnackBar('Wpisz poprawny adres e-mail');
+      retryRegistration();
       return;
     }
   }
