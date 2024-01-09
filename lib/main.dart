@@ -44,8 +44,9 @@ class MyApp extends StatelessWidget {
       },
       navigatorKey: MyApp.navigatorKey,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: kPageBackgroundColor, secondary: kFuriousRedColor),
+        colorScheme: ColorScheme.fromSwatch(
+            backgroundColor: kPageBackgroundColor,
+            accentColor: kFuriousRedColor),
         appBarTheme: const AppBarTheme(
           elevation: 0,
           backgroundColor: kFuriousRedColor,

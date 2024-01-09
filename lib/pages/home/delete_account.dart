@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furious_red_dragon/main.dart';
+import 'package:gap/gap.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../constants.dart';
 import 'settings_page.dart';
@@ -191,11 +192,10 @@ class _AccountDeletedPageState extends State<AccountDeletedPage> {
             const SizedBox(height: 20),
             Container(
               margin: kSplashInputMargin,
-              child: Image.asset(kMushuPath),
+              child: Image.asset(kDragonLogoPath),
             ),
             const SizedBox(height: 20),
-            kBigGap,
-            kBigGap,
+            const Gap(40),
             Text(
               'Przykro nam, że nas opuszczasz!',
               style: kGlobalTextStyle.copyWith(fontSize: 24),
@@ -205,13 +205,7 @@ class _AccountDeletedPageState extends State<AccountDeletedPage> {
               'Za $_countdown sekund zostaniesz przekierowany na stronę główną.',
               style: kGlobalTextStyle.copyWith(fontSize: 18),
             ),
-            kBigGap,
-            kBigGap,
-            kBigGap,
-            kBigGap,
-            kBigGap,
-            kBigGap,
-            kBigGap,
+            const Gap(140),
             const SizedBox(height: 20),
             const CustomPopup(
               message: 'Twoje konto zostało pomyślnie usunięte',
