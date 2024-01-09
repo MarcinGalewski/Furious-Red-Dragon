@@ -31,13 +31,11 @@ class HomePage extends StatelessWidget {
             future: getUserName(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text(
-                    'Witaj, Loading...'); // Display a loading message
+                return const Text('Witaj!');
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                // Data has been successfully fetched
-                var userName = snapshot.data ?? 'Default User';
+                var userName = snapshot.data ?? 'Szef';
                 return Text('Witaj, $userName');
               }
             },

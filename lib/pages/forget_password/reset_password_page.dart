@@ -1,83 +1,138 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:furious_red_dragon/components/buttons.dart';
+import 'package:furious_red_dragon/components/input.dart';
 import 'package:furious_red_dragon/components/splash_back_button.dart';
 import 'package:furious_red_dragon/constants.dart';
+import 'package:furious_red_dragon/main.dart';
+import 'package:furious_red_dragon/pages/home_page.dart';
+import 'package:furious_red_dragon/pages/splash_page.dart';
+import 'package:furious_red_dragon/pages/welcome_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:furious_red_dragon/components/input.dart';
+import 'package:furious_red_dragon/pages/home/settings_page.dart';
 
-class ResetPasswordPage extends StatelessWidget {
-  final String? email;
-  const ResetPasswordPage({Key? key, required this.email}) : super(key: key);
+// iasdasdgnore: must_be_immutable
+class ResetPasswordPage extends StatefulWidget {
+  const ResetPasswordPage({super.key});
+  static const routeName = '/resetPasswordPage';
+
+  @override
+  State<ResetPasswordPage> createState() => _ResetPasswordPage();
+}
+
+class _ResetPasswordPage extends State<ResetPasswordPage> {
+  bool ifReset = false;
+  TextEditingController oldPasswordController = TextEditingController();
+
+  TextEditingController newPasswordController = TextEditingController();
+
+  TextEditingController repeatNewPasswordController = TextEditingController();
+
+  final userCopy = supabase.auth.currentUser;
+  // Store the context
+  BuildContext? _context;
+
+  // Function to show a SnackBar
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(_context!).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: 'OK',
+          onPressed: () {},
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final supabase = Supabase.instance.client;
-    TextEditingController passwordController1 = TextEditingController();
-    TextEditingController passwordController2 = TextEditingController();
-
+    // Store the context
+    _context = context;
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 70,
-        toolbarHeight: 70,
-        backgroundColor: Colors.white,
-        leading: const Padding(
-          padding: EdgeInsets.only(left: 30, top: 30),
-          child: SplashBackButton(),
+        leading: const BackButton(
+          color: Colors.white,
         ),
+        toolbarHeight: 80,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(10),
+        )),
+        backgroundColor: kFuriousRedColor,
+        title: const Text('Ustaw nowe hasło'),
+        actions: const <Widget>[],
       ),
-      backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  color: Colors.white,
-                  margin: kSplashInputMargin,
-                  child: Hero(
-                    tag: 'logo',
-                    child: Image.asset(
-                      kDragonLogoPath,
-                      width: kScreenWidth * 0.35,
-                    ),
-                  ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                margin: kSplashInputMargin,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
                 ),
-                CustomTextField(
-                  labelText: 'Hasło',
-                  controller: passwordController1,
-                  obscureText: true,
-                ),
-                CustomTextField(
-                  labelText: 'Powtórz hasło',
-                  controller: passwordController2,
-                  obscureText: true,
-                ),
-                kBigGap,
-                BigRedButton(
-                  onTap: () async {
-                    if (passwordController1.text == passwordController2.text) {
-                      try {
-                        // Aktualizuj hasło bez starego hasła
-                        final response = await supabase.auth.updateUser(
-                          UserAttributes(password: passwordController1.text),
-                        );
-                        final updatedUser = response.user;
-                        print('Zaktualizowano hasło pomyślnie: $updatedUser');
-                      } catch (error) {
-                        print('Błąd aktualizacji hasła: $error');
-                      }
-                    } else {
-                      print('Hasła nie pasują do siebie.');
+              ),
+              CustomTextField(
+                labelText: 'Nowe hasło',
+                controller: newPasswordController,
+                obscureText: true, // Hide entered characters with asterisks
+              ),
+              CustomTextField(
+                labelText: 'Powtórz nowe hasło',
+                controller: repeatNewPasswordController,
+                obscureText: true,
+              ),
+              kBigGap,
+              BigRedButton(
+                onTap: () async {
+                  if (ifReset) return;
+                  ifReset = true;
+                  // Empty validation
+                  if (newPasswordController.text.isEmpty ||
+                      repeatNewPasswordController.text.isEmpty) {
+                    _showSnackBar('Wypełnij wszystkie pola');
+                    return;
+                  }
+
+                  //Password validation
+                  if (newPasswordController.text !=
+                      repeatNewPasswordController.text) {
+                    newPasswordController.text = '';
+                    repeatNewPasswordController.text = '';
+                    _showSnackBar('Hasła nie są identyczne');
+                    return;
+                  }
+
+                  // New password validation
+                  try {
+                    //final correctOldPass = await supabase.auth.admin.password;
+                    final UserResponse res = await supabase.auth.updateUser(
+                      UserAttributes(
+                        password: newPasswordController.text,
+                      ),
+                    );
+                    final User? updatedUser = res.user;
+                  } on AuthException catch (authError) {
+                    if (authError.statusCode == '422') {
+                      _showSnackBar(
+                          'Nowe hasło musi być inne od starego hasła!');
+                      ifReset = false;
+                      return;
                     }
-                  },
-                  buttonTitle: 'Zatwierdź',
-                ),
-              ],
-            ),
-          )
-        ],
+                    print('Błąd zmiany hasła: $authError');
+                    ifReset = false;
+                    return;
+                  }
+                  _showSnackBar('Hasło zostało zmienione!');
+                  Navigator.pushNamed(context, HomePage.routeName);
+                },
+                buttonTitle: 'Zmień hasło',
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
