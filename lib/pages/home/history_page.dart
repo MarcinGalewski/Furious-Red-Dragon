@@ -343,9 +343,9 @@ class UsersScreen extends StatelessWidget {
       body: WhiteCard(
         child: Column(
           children: [
-            UsersStream(),
+            const UsersStream(),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -357,7 +357,7 @@ class UsersScreen extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
                 ),
-                child: Column(children: [
+                child: const Column(children: [
                   Icon(
                     Icons.add_circle_outline,
                     color: Colors.black,
@@ -388,7 +388,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dodaj użytkownika'),
+        title: const Text('Dodaj użytkownika'),
       ),
       body: WhiteCard(
         child: Column(
@@ -396,17 +396,17 @@ class _AddUserScreenState extends State<AddUserScreen> {
           children: [
             Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 40,
                   child: Text('Imię:'),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8),
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: Color(0xffF3F3F3)),
+                          color: const Color(0xffF3F3F3)),
                       child: TextField(
                         decoration: InputDecoration(
                           labelStyle: kGlobalTextStyle.copyWith(
@@ -431,14 +431,14 @@ class _AddUserScreenState extends State<AddUserScreen> {
             kSmallGap,
             Row(
               children: [
-                SizedBox(width: 40, child: Text('Email:')),
+                const SizedBox(width: 40, child: Text('Email:')),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8),
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: Color(0xffF3F3F3)),
+                          color: const Color(0xffF3F3F3)),
                       child: TextField(
                         decoration: InputDecoration(
                           labelStyle: kGlobalTextStyle.copyWith(
