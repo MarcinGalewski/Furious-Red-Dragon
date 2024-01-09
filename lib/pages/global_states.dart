@@ -1,1 +1,1 @@
-bool isPhotoPermission = false;
+bool isPhotoPermission = true;
