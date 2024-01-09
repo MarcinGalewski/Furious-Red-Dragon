@@ -3,6 +3,8 @@ import 'package:furious_red_dragon/main.dart';
 import 'package:furious_red_dragon/pages/welcome_page.dart';
 import 'delete_account.dart'; // Załóżmy, że plik delete_account.dart znajduje się w tym samym folderze co ten plik
 import 'package:furious_red_dragon/components/buttons.dart';
+import 'package:furious_red_dragon/pages/change_password_page.dart';
+
 import '../../constants.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -36,7 +38,10 @@ class SettingsPage extends StatelessWidget {
               kBigGap,
               BigWhiteButton(
                 onTap: () {
-                  print('Zmiana hasła');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ChangePasswordPage()));
                 },
                 buttonTitle: ('Zmień hasło'),
               ),
