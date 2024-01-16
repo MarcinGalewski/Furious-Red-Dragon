@@ -12,10 +12,11 @@ import 'package:furious_red_dragon/pages/welcome_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:furious_red_dragon/pages/home/settings_page.dart';
 
-// iasdasdgnore: must_be_immutable
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+  const ResetPasswordPage({Key? key, required this.email}) : super(key: key);
+
   static const routeName = '/resetPasswordPage';
+  final String email;
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPage();
@@ -24,11 +25,8 @@ class ResetPasswordPage extends StatefulWidget {
 class _ResetPasswordPage extends State<ResetPasswordPage> {
   bool ifReset = false;
   TextEditingController oldPasswordController = TextEditingController();
-
   TextEditingController newPasswordController = TextEditingController();
-
   TextEditingController repeatNewPasswordController = TextEditingController();
-
   final userCopy = supabase.auth.currentUser;
   // Store the context
   BuildContext? _context;
@@ -96,7 +94,7 @@ class _ResetPasswordPage extends State<ResetPasswordPage> {
                     return;
                   }
 
-                  //Password validation
+                  // Password validation
                   if (newPasswordController.text !=
                       repeatNewPasswordController.text) {
                     newPasswordController.text = '';
@@ -106,8 +104,9 @@ class _ResetPasswordPage extends State<ResetPasswordPage> {
                   }
 
                   // New password validation
+                  // New password validation
+                  // New password validation
                   try {
-                    //final correctOldPass = await supabase.auth.admin.password;
                     final UserResponse res = await supabase.auth.updateUser(
                       UserAttributes(
                         password: newPasswordController.text,
@@ -125,6 +124,7 @@ class _ResetPasswordPage extends State<ResetPasswordPage> {
                     ifReset = false;
                     return;
                   }
+
                   _showSnackBar('Hasło zostało zmienione!');
                   Navigator.pushNamed(context, HomePage.routeName);
                 },

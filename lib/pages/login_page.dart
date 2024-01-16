@@ -68,7 +68,7 @@ class LoginPage extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const EmailCheckPage()));
+                          builder: (context) => EmailCheckPage()));
                 },
               ),
               kBigGap,
@@ -87,7 +87,8 @@ class LoginPage extends StatelessWidget {
                     isLoggingIn = false;
                     return;
                   }
-                  Navigator.popUntil(context, ModalRoute.withName('/welcomePage'));
+                  Navigator.popUntil(
+                      context, ModalRoute.withName('/welcomePage'));
                   Navigator.pushReplacementNamed(context, HomePage.routeName);
                   isLoggingIn = false;
                 },
