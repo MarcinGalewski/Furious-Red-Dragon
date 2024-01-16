@@ -30,11 +30,11 @@ class _SplashPageState extends State<SplashPage> {
     }
 
     final session = supabase.auth.currentSession;
-    Navigator.pushReplacementNamed(context, NoInternetDialog.routeName);
+    // Navigator.pushReplacementNamed(context, NoInternetDialog.routeName);
     if (session != null) {
-      Navigator.pushNamed(context, HomePage.routeName);
+      Navigator.pushReplacementNamed(context, HomePage.routeName);
     } else {
-      Navigator.pushNamed(context, WelcomePage.routeName);
+      Navigator.pushReplacementNamed(context, WelcomePage.routeName);
     }
   }
 

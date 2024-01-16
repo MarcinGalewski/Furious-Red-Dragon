@@ -18,42 +18,27 @@ class _NoInternetDialogState extends State<NoInternetDialog> {
   late StreamSubscription subscription;
   bool firstRun = true;
 
-  @override
-  void initState() {
-    super.initState();
-    getConnectivity();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getConnectivity();
+  // }
 
-  getConnectivity() {
-    subscription =
-        InternetConnection().onStatusChange.listen((InternetStatus status) {
-      switch (status) {
-        case InternetStatus.connected:
-          if (firstRun) {
-            firstRun = false;
-          } else {
-            Navigator.pop(context);
-          }
-          break;
-        case InternetStatus.disconnected:
-          firstRun = false;
-          Navigator.pushNamed(context, NoInternetDialog.routeName);
-          break;
-      }
-    });
-  }
 
-  @override
-  void dispose() {
-    subscription.cancel();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   subscription.cancel();
+  //   super.dispose();
+  // }
 
   static const IconData wifi_off =
       IconData(0xe6eb, fontFamily: 'MaterialIcons');
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
       backgroundColor: Colors.white,
       body: Container(
         margin: kSplashInputMargin,
@@ -92,6 +77,6 @@ class _NoInternetDialogState extends State<NoInternetDialog> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

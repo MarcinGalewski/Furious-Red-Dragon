@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furious_red_dragon/components/buttons.dart';
+import 'package:furious_red_dragon/main.dart';
 
 import '../../constants.dart';
 
@@ -13,7 +14,23 @@ class AddRoomPage extends StatefulWidget {
 }
 
 class _AddRoomPageState extends State<AddRoomPage> {
-  List<String> buildings = ['34', '38', 'will change lists later'];
+
+  List<String> buildings = ['database failed'];
+
+  @override
+  void initState() {
+    super.initState();
+    readData();
+  }
+
+  Future<void> readData() async {
+    var response = await supabase
+        .from('buildings')
+        .select('number');
+    setState(() {
+      buildings = response;
+    });
+  }
 
   String selectedBuilding = '';
   String selectedFloor = '';
