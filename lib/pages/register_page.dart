@@ -11,18 +11,29 @@ import '../main.dart';
 import 'login_page.dart';
 
 @override
-class RegisterPage extends StatelessWidget {
-  RegisterPage({super.key});
-  bool ifRegistered = false;
-  bool ifConfirmed = false;
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
   static const routeName = '/registerPage';
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  bool ifRegistered = false;
+
+  bool ifConfirmed = false;
 
   // Controllers for email, password, and repeat password fields
   final TextEditingController nameController = TextEditingController();
+
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
+
   final TextEditingController repeatPasswordController =
       TextEditingController();
+
   final TextEditingController tokenController = TextEditingController();
 
   // Store the context
@@ -83,7 +94,7 @@ class RegisterPage extends StatelessWidget {
                       } catch (error) {
                         _showSnackBar(
                             'Nieudana weryfikacja tokena. Sprawdź poprawność tokena.');
-                            retryRegistration();
+                        retryRegistration();
                         return;
                       }
 
@@ -117,7 +128,7 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-    // Reseting flags after invalid registration
+  // Reseting flags after invalid registration
   void retryRegistration() {
     ifRegistered = false;
     ifConfirmed = false;
@@ -207,7 +218,7 @@ class RegisterPage extends StatelessWidget {
           .from('roles')
           .select('email')
           .eq('email', emailController.text);
-      final count = data.length;  
+      final count = data.length;
       if (count == 0) {
         await _showTokenConfirmationDialog(
             emailController.text, nameController.text);
